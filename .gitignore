@@ -1,0 +1,14 @@
+# R
+.Rhistory
+.RData
+.Rproj.user/
+*.Rproj
+# model fits and Stan build files
+*.rds
+*.exe
+fits/
+# OS / editors
+.DS_Store
+Thumbs.db
+.vscode/
+.ipynb_checkpoints/
