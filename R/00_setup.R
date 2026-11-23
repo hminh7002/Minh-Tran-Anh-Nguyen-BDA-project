@@ -26,6 +26,7 @@ cran_pkgs <- c(
   "survival",    # the retinopathy data + Kaplan-Meier
   "posterior",   # summaries and convergence diagnostics (Rhat, ESS)
   "bayesplot",   # MCMC and posterior predictive check plots
+  "ggfortify",   # needed by bayesplot for Kaplan-Meier overlay plots
   "loo",         # leave-one-out cross-validation
   "priorsense",  # prior sensitivity (power-scaling)
   "ggplot2", "dplyr", "tidyr",
