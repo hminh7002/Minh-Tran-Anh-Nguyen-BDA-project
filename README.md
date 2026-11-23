@@ -80,7 +80,7 @@ Software: R (≥ 4.3) with `brms`, `cmdstanr` (+ CmdStan), `survival`, `posterio
 
 1. **Install R** from <https://cran.r-project.org> (Windows: "Download R for Windows" → "base").
 2. **Windows only: install Rtools** from <https://cran.r-project.org/bin/windows/Rtools/>, choosing the
-   version that matches your R version (e.g. Rtools46 for R 4.6.x). Stan needs its C++ compiler.
+   version that matches your R version (Rtools45 is used for R 4.5 and 4.6). Stan needs its C++ compiler.
 3. **Install an editor**: RStudio or Positron (<https://posit.co/download/>), or VS Code with the
    "R" extension (then also run `install.packages("languageserver")`).
 4. **Open the project folder** in the editor and run, from the project root:
