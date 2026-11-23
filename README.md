@@ -66,21 +66,45 @@ compared with leave-one-patient-out cross-validation. Details: [`docs/project_pl
 ├── docs/
 │   ├── project_plan.md      # questions, models, priors, workflow, timeline, roles
 │   └── report_outline.md    # section-by-section outline of the final report
-├── R/                       # analysis scripts (to be added)
+├── R/
+│   ├── 00_setup.R           # one-time environment setup
+│   └── 01_smoke_test.R      # checks the toolchain by fitting model M1
 ├── figures/                 # generated figures (to be added)
 └── report/                  # report source and PDF (to be added)
 ```
 
-## Software
+## Setting up R
 
-R (≥ 4.3) with `brms`, `cmdstanr` (and CmdStan), `survival`, `posterior`, `bayesplot`, `loo`,
+Software: R (≥ 4.3) with `brms`, `cmdstanr` (+ CmdStan), `survival`, `posterior`, `bayesplot`, `loo`,
 `priorsense`, `ggplot2`, `dplyr`.
 
-```r
-install.packages(c("brms", "survival", "posterior", "bayesplot", "loo", "priorsense", "ggplot2", "dplyr"))
-install.packages("cmdstanr", repos = c("https://stan-dev.r-universe.dev", getOption("repos")))
-cmdstanr::install_cmdstan()
-```
+1. **Install R** from <https://cran.r-project.org> (Windows: "Download R for Windows" → "base").
+2. **Windows only: install Rtools** from <https://cran.r-project.org/bin/windows/Rtools/>, choosing the
+   version that matches your R version (e.g. Rtools45 for R 4.5.x). Stan needs its C++ compiler.
+3. **Install an editor**: RStudio or Positron (<https://posit.co/download/>), or VS Code with the
+   "R" extension (then also run `install.packages("languageserver")`).
+4. **Open the project folder** in the editor and run, from the project root:
+   ```r
+   source("R/00_setup.R")      # installs packages, checks the toolchain, installs CmdStan (5-15 min)
+   source("R/01_smoke_test.R") # fits the pooled Weibull model; should end with "Smoke test finished"
+   ```
+
+### Running the scripts in VS Code (Windows)
+
+1. Install the **R** extension (publisher: REditorSupport) and, in R, `install.packages("languageserver")`.
+2. If R is not found, open Settings (`Ctrl+,`), search `r.rterm.windows`, and set it to your R path, e.g.
+   `C:\Program Files\R\R-4.5.2\bin\R.exe` (check the version folder in `C:\Program Files\R`).
+3. *File → Open Folder…* → select the project folder (the one containing `README.md`).
+4. `Ctrl+Shift+P` → **R: Create R terminal**. An R console opens in the bottom panel, already in the project
+   folder (check with `getwd()`).
+5. Type the `source(...)` lines above at the `>` prompt and press Enter.
+   Alternatively open a script and press `Ctrl+Shift+S` (*R: Source file*).
+
+Without the extension, use a normal terminal (`` Ctrl+` ``) in the project folder:
+`& "C:\Program Files\R\R-4.5.2\bin\Rscript.exe" R/00_setup.R` (adjust the version).
+
+Expected smoke-test result: 0 divergences, max R-hat < 1.01, and a time ratio (treated vs untreated)
+around 2.6 with a 90% interval of roughly 1.9–3.7.
 
 ## Status
 
