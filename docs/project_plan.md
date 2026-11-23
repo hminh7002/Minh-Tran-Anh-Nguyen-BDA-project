@@ -85,13 +85,18 @@ Optional extensions if time allows:
 
 | parameter | prior | reasoning |
 |---|---|---|
-| Intercept (log mean months, centred predictors) | `normal(log(60), 1.5)` | typical time to vision loss of order years; ±1.5 on log scale covers ~3 to ~1200 months |
-| coefficients `b` | `normal(0, 1)` | time ratios mostly between 1/7 and 7 (2 sd) |
-| Weibull shape | `gamma(2, 1)` | positive, centred near 1–2, allows increasing or decreasing hazard |
-| `sd(id)` | `exponential(1)` | patient variation on log-time scale; large values allowed but not favoured |
+| Intercept (log mean months, average eye) | `normal(4.1, 1)` | log(60): mean time ~5 years; 95% between ~8 months and ~40 years |
+| coefficients `b` | `normal(0, 0.75)` | time ratios mostly within 1/4.4 to 4.4 (95%); no direction assumed |
+| Weibull shape | `gamma(4, 4)` | mean 1 (constant hazard); 90% within 0.34–1.94; looser priors gave absurd median times (< 1 day) |
+| `sd(id)` | `exponential(2)` | patient variation on log-time scale, mean 0.5 |
 
-Alternative priors for sensitivity: `b ~ normal(0, 2.5)`, `sd ~ exponential(0.5)`, intercept
-`normal(log(60), 3)`, plus `priorsense` power-scaling.
+Prior predictive check (`R/02_priors.R`, `figures/fig2_prior_predictive.png`): implied median time to vision
+loss for an untreated eye has 90% interval ~2–270 months; implied P(vision loss within 5 years) ranges
+from 0.09 to 1.00; the treatment time ratio is centred at 1 (no effect assumed). The simulated survival
+curves surround the observed Kaplan–Meier curve without being implausible.
+
+Alternative (wider) priors for sensitivity, also defined in `R/02_priors.R`: intercept `normal(4.1, 2)`,
+`b ~ normal(0, 2)`, shape `gamma(1, 0.5)`, `sd ~ exponential(0.5)`; plus `priorsense` power-scaling.
 
 ## 5. Workflow and code sketch
 
@@ -104,14 +109,14 @@ d <- within(retinopathy, {
   type   <- factor(type); laser <- factor(laser)
 })
 
-priors <- c(prior(normal(4.1, 1.5), class = Intercept),   # log(60) ≈ 4.1
-            prior(normal(0, 1), class = b),
-            prior(gamma(2, 1), class = shape))
+priors <- c(prior(normal(4.1, 1), class = Intercept),     # log(60) ≈ 4.1  (see R/02_priors.R)
+            prior(normal(0, 0.75), class = b),
+            prior(gamma(4, 4), class = shape))
 
 # prior predictive check
 m2_prior <- brm(futime | cens(cens) ~ trt + type + laser + risk_c + (1 | id),
                 data = d, family = weibull(),
-                prior = c(priors, prior(exponential(1), class = sd)),
+                prior = c(priors, prior(exponential(2), class = sd)),
                 sample_prior = "only", backend = "cmdstanr")
 
 # fits
@@ -119,7 +124,7 @@ m1 <- brm(futime | cens(cens) ~ trt + type + laser + risk_c, data = d,
           family = weibull(), prior = priors, backend = "cmdstanr",
           chains = 4, iter = 2000, seed = 1)
 m2 <- update(m1, formula. = ~ . + (1 | id), newdata = d,
-             prior = c(priors, prior(exponential(1), class = sd)))
+             prior = c(priors, prior(exponential(2), class = sd)))
 m3 <- update(m2, formula. = futime | cens(cens) ~ trt * type + trt * laser + risk_c + (1 | id),
              newdata = d)
 
