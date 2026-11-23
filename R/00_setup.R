@@ -9,6 +9,10 @@
 # =============================================================================
 
 cat("R version:", R.version.string, "\n")
+# use a fixed CRAN mirror so installation never stops to ask (also works with Rscript)
+if (is.null(getOption("repos")) || getOption("repos")[["CRAN"]] %in% c("@CRAN@", "")) {
+  options(repos = c(CRAN = "https://cloud.r-project.org"))
+}
 if (getRversion() < "4.3.0") stop("Please install R 4.3 or newer from https://cran.r-project.org")
 
 # ---- 1. CRAN packages --------------------------------------------------------
