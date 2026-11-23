@@ -13,6 +13,11 @@ cat("R version:", R.version.string, "\n")
 if (is.null(getOption("repos")) || getOption("repos")[["CRAN"]] %in% c("@CRAN@", "")) {
   options(repos = c(CRAN = "https://cloud.r-project.org"))
 }
+# install packages into a personal library (C:/Program Files/R is not writable without admin rights)
+user_lib <- Sys.getenv("R_LIBS_USER")
+if (!dir.exists(user_lib)) dir.create(user_lib, recursive = TRUE)
+.libPaths(c(user_lib, .libPaths()))
+cat("Installing packages into:", .libPaths()[1], "\n")
 if (getRversion() < "4.3.0") stop("Please install R 4.3 or newer from https://cran.r-project.org")
 
 # ---- 1. CRAN packages --------------------------------------------------------
