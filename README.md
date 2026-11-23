@@ -80,7 +80,7 @@ Software: R (≥ 4.3) with `brms`, `cmdstanr` (+ CmdStan), `survival`, `posterio
 
 1. **Install R** from <https://cran.r-project.org> (Windows: "Download R for Windows" → "base").
 2. **Windows only: install Rtools** from <https://cran.r-project.org/bin/windows/Rtools/>, choosing the
-   version that matches your R version (e.g. Rtools45 for R 4.5.x). Stan needs its C++ compiler.
+   version that matches your R version (e.g. Rtools46 for R 4.6.x). Stan needs its C++ compiler.
 3. **Install an editor**: RStudio or Positron (<https://posit.co/download/>), or VS Code with the
    "R" extension (then also run `install.packages("languageserver")`).
 4. **Open the project folder** in the editor and run, from the project root:
@@ -93,15 +93,22 @@ Software: R (≥ 4.3) with `brms`, `cmdstanr` (+ CmdStan), `survival`, `posterio
 
 1. Install the **R** extension (publisher: REditorSupport) and, in R, `install.packages("languageserver")`.
 2. If R is not found, open Settings (`Ctrl+,`), search `r.rterm.windows`, and set it to your R path, e.g.
-   `C:\Program Files\R\R-4.5.2\bin\R.exe` (check the version folder in `C:\Program Files\R`).
+   `C:\Program Files\R\R-4.6.2\bin\R.exe` (check the version folder in `C:\Program Files\R`).
 3. *File → Open Folder…* → select the project folder (the one containing `README.md`).
 4. `Ctrl+Shift+P` → **R: Create R terminal**. An R console opens in the bottom panel, already in the project
    folder (check with `getwd()`).
 5. Type the `source(...)` lines above at the `>` prompt and press Enter.
    Alternatively open a script and press `Ctrl+Shift+S` (*R: Source file*).
 
+If installing a package fails with *"lib ... is not writable"*, create your personal package library once
+(in any R console), then reload VS Code (`Ctrl+Shift+P` → *Developer: Reload Window*):
+```r
+dir.create(Sys.getenv("R_LIBS_USER"), recursive = TRUE)
+.libPaths(Sys.getenv("R_LIBS_USER")); install.packages("languageserver")
+```
+
 Without the extension, use a normal terminal (`` Ctrl+` ``) in the project folder:
-`& "C:\Program Files\R\R-4.5.2\bin\Rscript.exe" R/00_setup.R` (adjust the version).
+`& "C:\Program Files\R\R-4.6.2\bin\Rscript.exe" R/00_setup.R` (adjust the version).
 
 Expected smoke-test result: 0 divergences, max R-hat < 1.01, and a time ratio (treated vs untreated)
 around 2.6 with a 90% interval of roughly 1.9–3.7.
