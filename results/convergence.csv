@@ -1,0 +1,4 @@
+"model","parameters","max_rhat","min_bulk_ess","min_tail_ess","divergences","max_treedepth"
+"M1",7,1.001,2639,2664,0,0
+"M2",205,1.006,793,795,0,0
+"M3",207,1.009,963,1395,0,0
